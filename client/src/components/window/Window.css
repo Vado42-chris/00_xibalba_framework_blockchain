@@ -1,0 +1,203 @@
+/**
+ * WINDOW STYLES
+ * 
+ * Refined, calm, inevitable
+ * Uses design system tokens
+ */
+
+.window {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26);
+  user-select: none;
+  pointer-events: auto;
+  position: absolute;
+  font-family: var(--font-family);
+  border-radius: 10px;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Resize hit zones - 8px wide bands along edges (S3.CN.01b) */
+.window::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.window-resize-zone {
+  position: absolute;
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.window-resize-zone-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.window-resize-zone-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.window-resize-zone-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.window-resize-zone-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.window-resize-zone-top-left {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nwse-resize;
+}
+
+.window-resize-zone-top-right {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nesw-resize;
+}
+
+.window-resize-zone-bottom-left {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nesw-resize;
+}
+
+.window-resize-zone-bottom-right {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nwse-resize;
+}
+
+.window-focused {
+  border-color: var(--accent);
+}
+
+.window-blurred {
+  border-color: var(--border-default);
+  opacity: 0.92;
+}
+
+.window-titlebar {
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-default);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Cursor handled by spatial semantics - don't set here */
+  min-height: 40px;
+  -webkit-user-select: none;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* No active state - spatial semantics handles cursor */
+
+
+.window-focused .window-titlebar {
+  background: var(--bg-elevated);
+  border-bottom-color: var(--accent);
+  border-bottom-width: 1.5px;
+}
+
+.window-title {
+  color: var(--text-primary);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  flex: 1;
+  letter-spacing: -0.01em;
+  user-select: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-close {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 20px;
+  line-height: 1;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  /* Cursor handled by spatial semantics - don't set here */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: var(--space-2);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  pointer-events: auto;
+  /* Visual size: 20px, but 16px hit radius = 32px effective target */
+  /* Spatial semantics handles click via handlePointerDown */
+  /* No hover/active states - spatial semantics handles all interaction feedback */
+}
+
+.window-content {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-4);
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  outline: none;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  scrollbar-width: thin;
+  scrollbar-color: var(--bg-tertiary) var(--bg-primary);
+  -webkit-overflow-scrolling: touch;
+  cursor: default;
+}
+
+/* Allow text selection in content areas */
+.window-content p,
+.window-content span,
+.window-content div:not(.window-titlebar) {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.window-focused .window-content {
+  background: var(--bg-secondary);
+}
+
+.window-content:focus {
+  outline: none;
+}
