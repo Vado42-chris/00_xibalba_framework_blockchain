@@ -1,0 +1,149 @@
+/**
+ * XIBALBA DESKTOP - DESIGN SYSTEM
+ * 
+ * Centralized design tokens and component styles
+ * Based on Xibalba brand standards
+ * 
+ * #hallbergway — Calm, inevitable, self-explanatory
+ */
+
+:root {
+  /* ===== COLORS ===== */
+  /* Backgrounds - Dark Grey Scale */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #252525;
+  --bg-elevated: #2a2a2a;
+  
+  /* Text - Light Grey Scale */
+  --text-primary: #ffffff;
+  --text-secondary: #bfbfbf;
+  --text-tertiary: #808080;
+  --text-muted: #666666;
+  
+  /* Xibalba Cyan - Core Identity */
+  --cyan-400: #22D3EE;
+  --cyan-500: #06B6D4;
+  --cyan-700: #0E7490;
+  --accent: var(--cyan-500);
+  --accent-light: var(--cyan-400);
+  --accent-dark: var(--cyan-700);
+  
+  /* Semantic Colors */
+  --error: #EF4444;
+  --error-hover: #DC2626;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  
+  /* Borders */
+  --border-default: #2a2a2a;
+  --border-light: #1a1a1a;
+  --border-focus: var(--accent);
+  
+  /* ===== TYPOGRAPHY ===== */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto Flex', sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  
+  /* Font Sizes - Refined Scale */
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 20px;
+  
+  /* Font Weights */
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  
+  /* Line Heights */
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.6;
+  
+  /* ===== SPACING ===== */
+  /* 4px baseline grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  
+  /* ===== SHADOWS ===== */
+  /* Normalized against background luminance */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-focus: 0 2px 12px rgba(6, 182, 212, 0.2);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5);
+  
+  /* Window depth shadows (normalized) */
+  --shadow-window-base: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 12px 24px rgba(0, 0, 0, 0.28);
+  --shadow-window-focused: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 16px 36px rgba(0, 0, 0, 0.36);
+  --shadow-window-dragging: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 20px 44px rgba(0, 0, 0, 0.4);
+  
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  
+  /* ===== TRANSITIONS ===== */
+  /* Minimal, intentional motion only */
+  --transition-fast: 100ms;
+  --transition-normal: 150ms;
+  --transition-slow: 200ms;
+  
+  /* Window animations */
+  --window-emerge-duration: 150ms;
+  
+  /* ===== Z-INDEX ===== */
+  --z-base: 1000;
+  --z-window: 1001;
+  --z-launcher: 1002;
+  --z-modal: 1003;
+  --z-tooltip: 1004;
+}
+
+/* ===== BASE RESET ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-elevated);
+}
+
+/* ===== FOCUS STYLES ===== */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ===== SELECTION ===== */
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
