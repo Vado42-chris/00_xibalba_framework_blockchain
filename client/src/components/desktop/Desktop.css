@@ -1,0 +1,61 @@
+/**
+ * DESKTOP STYLES
+ * 
+ * Full-screen desktop surface
+ * Overlay pattern - does not break existing site
+ */
+
+.desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+  cursor: default;
+  z-index: var(--z-base);
+  pointer-events: none;
+  font-family: var(--font-family);
+}
+
+.desktop-launcher-button {
+  position: fixed;
+  bottom: var(--space-3);
+  left: var(--space-3);
+  z-index: var(--z-launcher);
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  font-size: 26px;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  pointer-events: auto;
+  user-select: none;
+  line-height: 1;
+}
+
+.desktop-launcher-button:hover {
+  background: var(--accent-light);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.desktop-launcher-button:active {
+  background: var(--accent-dark);
+  transform: translateY(0) scale(0.96);
+}
+
+.desktop-launcher-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
