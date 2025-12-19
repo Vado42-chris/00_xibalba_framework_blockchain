@@ -32,7 +32,7 @@ const SECRET = process.env.HYBRID_API_TOKEN || null;
 // Map of friendly command keys to the actual command to enqueue.
 // Keep this list minimal and explicit for safety.
 const ALLOWED = {
-  build: "npm run build",
+  build: "npm --prefix client run build",
   ci: "npm ci",
   preview: "npm run preview",
   // add other safe commands here as needed

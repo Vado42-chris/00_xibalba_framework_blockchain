@@ -1,0 +1,15 @@
+{
+  "version": "anchor-readme-v1",
+  "content": {
+    "type": "sha256",
+    "value": "230bdd7cc553f1b14276f45e09255acd92ea0564005abb06f6b602a404d5886b",
+    "sizeBytes": 195,
+    "path": "README.md"
+  },
+  "summary": "Private provenance anchor",
+  "author": "seed001",
+  "owner": "seed001",
+  "payoutAddress": "NONE",
+  "metadata": {},
+  "timestamp": "2025-12-19T12:15:15.701Z"
+}

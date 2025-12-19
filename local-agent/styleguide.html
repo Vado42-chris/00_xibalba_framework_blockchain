@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Xibalba — Local Styleguide</title>
+  <style>
+    :root{
+      /* Design tokens (example defaults) */
+      --accent-500: #0b63ff;
+      --accent-400: #2b83ff;
+      --muted-500: #6b7280;
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --text-900: #0f172a;
+      --text-700: #334155;
+      --success: #10b981;
+      --danger: #ef4444;
+      --radius: 8px;
+      --shadow-sm: 0 1px 3px rgba(2,6,23,0.08);
+      --shadow-md: 0 6px 18px rgba(2,6,23,0.12);
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --type-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --type-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      --fs-hero: 28px;
+      --fs-h1: 22px;
+      --fs-body: 14px;
+    }
+
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--text-900);font-family:var(--type-sans);-webkit-font-smoothing:antialiased;}
+    header{padding:18px 24px;border-bottom:1px solid #eef2f7;background:linear-gradient(180deg, rgba(11,99,255,0.03), transparent);}
+    header h1{margin:0;font-size:var(--fs-h1);}
+    main{padding:24px;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;}
+    .panel{background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);}
+    .panel h2{margin:0 0 12px 0;font-size:16px}
+    .tokens{display:flex;flex-wrap:wrap;gap:10px}
+    .token{border-radius:6px;padding:8px 12px;background:#fff;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:10px;font-size:13px}
+    .swatch{width:84px;height:52px;border-radius:6px;border:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;color:white;font-weight:600}
+    .palette{display:flex;gap:10px;flex-wrap:wrap}
+    .spacing{display:flex;align-items:flex-end;gap:12px}
+    .spacing div{background:#fff;border-radius:4px;padding:6px 8px;border:1px solid #eee;text-align:center;font-size:12px}
+
+    /* Typography */
+    .typography p{margin:6px 0;color:var(--text-700)}
+    .typography h1{font-size:var(--fs-hero);margin:6px 0}
+    .typography h2{font-size:20px;margin:6px 0}
+    .muted{color:var(--muted-500);font-size:13px}
+
+    /* Buttons */
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+    .btn-primary{background:var(--accent-500);color:white;box-shadow:var(--shadow-sm)}
+    .btn-ghost{background:transparent;border:1px solid #e6eefc;color:var(--accent-500)}
+    .btn-danger{background:var(--danger);color:white}
+
+    /* Inputs / Forms */
+    input[type="text"], textarea, select{
+      width:100%;padding:10px;border-radius:8px;border:1px solid #e6eefc;background:white;font-size:14px;
+    }
+
+    /* Card / list */
+    .card{background:white;padding:14px;border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid rgba(2,6,23,0.04)}
+    .row{display:flex;gap:12px;align-items:center}
+
+    /* Tablet preview frame */
+    .preview-wrapper{display:flex;flex-direction:column;gap:12px}
+    .preview-controls{display:flex;gap:8px;align-items:center}
+    .frame{width:768px;max-width:100%;border-radius:12px;border:1px solid #e6eefc;overflow:hidden;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:var(--shadow-md)}
+    .frame-inner{padding:16px}
+    .tablet{width:600px;height:900px;margin:0 auto;border-radius:18px;border:10px solid #f3f6fb;background:white;box-shadow:0 8px 30px rgba(2,6,23,0.12);overflow:auto}
+    .tablet .card{margin-bottom:12px}
+    .kicker{font-size:12px;color:var(--muted-500);text-transform:uppercase;letter-spacing:0.06em}
+
+    /* Responsive layout */
+    @media (max-width:1024px){
+      main{grid-template-columns:1fr; padding:12px}
+      .frame{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header></body></header>
+    <h1>Xibalba — Local Styleguide & Component Preview</h1>
+    <div class="muted">This file is intended as a local, editable styleguide. Place it at <code>00_xibal</code>ba_alpaca/local-agent/styleguide.html</code> and the local UI will serve it at <code>/styleguide</code>.</div>
+  </header>
+
+  <main>
+    <</main>section>
+      <div class="panel">
+        <h2></h2>Design tokens</h2>
+        <div class="tokens" role="list">
+          <div class="token" style="flex-direction:column">
+            <div style="font-size:11px;color:var(--muted-500)">Accent</div>
+            <div class="swatch" style="background:var(--accent-500);width:120px;height:56px">#0b63ff</div>
+            <div class="muted" style="margin-top:6px">--accent-500</div>
+          </div>
+
+          <div class="token" style="flex-direction:column">
+            <div style="font-size:11px;color:var(--muted-500)">Success</div>
+            <div class="swatch" style="background:var(--success);width:120px;height:56px">#10b981</div>
+            <div class="muted" style="margin-top:6px">--success</div>
+          </div>
+
+          <div class="token" style="flex-direction:column">
+            <div style="font-size:11px;color:var(--muted-500)">Danger</div>
+            <div class="swatch" style="background:var(--danger);width:120px;height:56px">#ef4444</div>
+            <div class="muted" style="margin-top:6px">--danger</div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:18px">Spacing scale</h3>
+        <div class="spacing">
+          <div style="height:20px;width:20px"></div>
+          <div style="height:30px;width:30px"></div>
+          <div style="height:44px;width:44px"></div>
+          <div style="height:64px;width:64px"></div>
+          <div style="height:96px;width:96px"></div>
+        </div>
+
+        <h3 style="margin-top:18px">Typography</h3>
+        <div class="typography">
+          <h1>Hero heading —</h1> 28px</h1>
+          <h2>Section heading —</h2> 20px</h2>
+          <p>Body text</p> — 14px. Use a readable system font stack and tokens for line-height and color.</p>
+          <p class="muted">Muted text / helper copy</p>
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <div class="panel">
+        <h2>Components</h2></h2>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-danger">Danger</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="card">
+            <div class="kicker">Card</div>
+            <h3 style="margin:6px 0 8px 0">Card Title</h3>
+            <p class="muted">A simple card pattern with title, body copy and actions.</p>
+            <div style="margin-top:12px"><button class="btn btn-primary">Action</button></div>
+          </div>
+
+          <div class="card">
+            <div class="kicker">Form</div>
+            <label class="muted">Name</label>
+            <input type="text" placeholder="Full name" />
+            <div style="height:8px"></div>
+            <label class="muted">Description</label>
+            <textarea rows="3" placeholder="A short description"></textarea>
+            <div style="height:10px"></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn btn-ghost">Cancel</button>
+              <button class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:14px">Lists / Tables</h3>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:600">Recent jobs</div>
+            <div class="muted">Updated moments ago</div>
+          </div>
+          <ul style="margin:12px 0 0 0;padding:0;list-style:none">
+            <li style="padding:8px 0;border-bottom:1px dashed #eef6ff">job-2025... - <span class="muted">pending</span></li>
+            <li style="padding:8px 0;border-bottom:1px dashed #eef6ff">job-2025... - <span class="muted">completed</span></li>
+            <li style="padding:8px 0">job-2025... - <span style="color:var(--danger)">failed</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <aside></aside>
+      <div class="panel">
+        <h2>Usage & Notes</h</h2>2>
+        <p class="muted">This local styleguide is intentionally small and self-contained so the local UI can serve it without external assets. You can edit tokens at the top of the page to preview changes instantly.</p>
+        <h3>Where to put</h3> this</h3>
+        <p class="muted">Place this file at <code></code>00_xibalba_alpaca/local-agent/styleguide.html</code>. The UI server will serve it at <code>/styleguide</code>.</p>
+
+        <h3 style="margin-top:12px">Tokens quick reference</h3>
+        <div style="font-family:var(--type-mono);background:#fff;padding:8px;border-radius:6px;margin-top:6px">
+          --accent-500: <strong>#0b63ff</strong><br>
+          --success: <strong>#10b981</strong><br>
+          --danger: <strong>#ef4444</strong>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="panel preview-wrapper">
+        <h2>Tablet preview</h2></h2>
+        <div class="preview-controls">
+          <div class="muted">Preview frame simulating a tablet viewport. Use this to check layout & touch targets.</div>
+        </div>
+
+        <div class="frame">
+          <div class="frame-inner">
+            <div class="tablet">
+              <div style="padding:18px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                  <div>
+                    <</div>div class="kicker">Dashboard</div>
+                    <h3 style="margin:6px 0">Tablet Demo</h3>
+                    <div class="muted">Local-first publish surface</div>
+                  </div>
+                  <div><button class="btn btn-primary">Publish</button></div>
+                </div>
+
+                <div class="card">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div>
+                      <div class="mut</div>ed">Workspace</div>
+                      <div style="font-weight:700">My Project</div>
+                    </div>
+                    <div class="muted">branch: <strong>publish/2025...</strong></div</strong>>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="kicker">Activity</div>
+                  <ul style="margin:6px 0 0 0;padding-left:18px">
+                    <li>Created</li> .cmd job <span class="muted">job-abc123</span></li>
+                    <li>Agent processed job</li> <span class="muted">job-abc123</span></li>
+                    <li></li>PR opened draft <span class="muted">#42</span></li>
+                  </ul>
+                </div>
+
+                <div style="height:40px"></div>
+                <div style="text-align:center" class="muted">End of demo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="muted" style="font-size:12px">Tip: Edit the top of this file to change tokens. This demo is intentionally minimal — add examples for your real components here.</div>
+      </div>
+
+    </aside>
+  </main>
+
+  <footer style="padding:12px 24px;border-top:1px solid #f0f4fb;text-align:center;color:#6b7280;font-size:13px">
+    Local styleguide — edit and extend. Saved at <code></code>00_xibalba_alpaca/local-agent/styleguide.html</code>
+  </footer>
+</body>
+</html>

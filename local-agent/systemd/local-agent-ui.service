@@ -1,0 +1,53 @@
+[Unit]
+Description=Xibalba Local Agent + UI (hybrid-queue runner)
+Documentation=
+After=network.target
+Wants=network.target
+
+[Service]
+# NOTE: Edit User and WorkingDirectory to match the user and repo location on your host.
+# Example: User=chrishallberg and WorkingDirectory=/home/chrishallberg/00_xibalba_alpaca
+Type=simple
+User=YOUR_LOCAL_USER
+WorkingDirectory=/home/YOUR_LOCAL_USER/00_xibalba_alpaca
+
+# Start both the UI server and the agent, monitor both and exit when either stops.
+# The shell starts both processes in the background and uses `wait -n` to return when
+# the first one exits; systemd will then treat that as service exit and (with Restart)
+# attempt to restart the entire unit.
+ExecStart=/bin/bash -lc '\
+  set -o pipefail; \
+  mkdir -p local-agent-logs; \
+  python3 local-agent/ui_server.py --queue hybrid-queue --results hybrid-results --port 8765 >> local-agent-logs/ui-server.log 2>&1 & ui_pid=$!; \
+  python3 local-agent/agent.py --queue hybrid-queue --results hybrid-results --secret "${HYBRID_SECRET:-}" >> local-agent-logs/agent.log 2>&1 & agent_pid=$!; \
+  # Wait until either process exits; then attempt to stop both so systemd can restart cleanly \
+  wait -n $ui_pid $agent_pid; \
+  kill -- -${agent_pid} 2>/dev/null || true; \
+  kill -- -${ui_pid} 2>/dev/null || true; \
+  wait'
+
+# Ensure entire process tree is killed on stop/restart
+KillMode=control-group
+Restart=on-failure
+RestartSec=5s
+TimeoutStartSec=60
+TimeoutStopSec=20
+
+# Environment and safety
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=-/etc/default/local-agent  # optional extra env file (ignored if absent)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+# Create a runtime directory for transient state if needed
+RuntimeDirectory=local-agent-ui
+RuntimeDirectoryMode=0755
+
+# Logging — unit logs still go to journal; we also append to files under WorkingDirectory/local-agent-logs
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

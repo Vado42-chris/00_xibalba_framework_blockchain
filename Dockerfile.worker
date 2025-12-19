@@ -1,0 +1,65 @@
+# 00_xibalba_alpaca/Dockerfile.worker
+# Minimal Dockerfile for the hybrid-capable worker.
+# Builds on python:3.11-slim and installs either requirements.txt (if present)
+# or falls back to installing minimal runtime deps (requests).
+#
+# Notes:
+# - The container runs the worker script by default. Override args via docker-compose or `docker run`.
+# - Binds to /app (the repository) so you can iterate from your editor (Zed/VS Code).
+# - For security in production, run the worker with a non-root user, resource limits, and secrets provided via env.
+# - If you mount hybrid-queue and hybrid-results as volumes, the worker will use them.
+
+FROM python:3.11-slim
+
+# Do not buffer Python stdout/stderr (better logs)
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    WORKDIR=/app
+
+WORKDIR ${WORKDIR}
+
+# Install minimal system deps that are commonly required by Python packages.
+# Keep image small by cleaning apt caches.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      gcc \
+      libffi-dev \
+      libssl-dev \
+      curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user for running the worker
+RUN useradd --create-home --shell /bin/bash workeruser
+
+# Copy project files into image
+COPY . ${WORKDIR}
+
+# Install Python dependencies:
+# If a top-level requirements.txt exists, install it for reproducible deps,
+# otherwise install a minimal set required for the worker to function.
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && if [ -f requirements.txt ]; then \
+         pip install -r requirements.txt ; \
+       else \
+         pip install requests ; \
+       fi
+
+# Make sure the worker user owns the app files
+RUN chown -R workeruser:workeruser ${WORKDIR}
+
+# Switch to the non-root user
+USER workeruser
+
+# Create directories for hybrid file-queue if not present (kept in image for convenience).
+# In practice these will usually be bind-mounted from the host.
+RUN mkdir -p ${WORKDIR}/hybrid-queue ${WORKDIR}/hybrid-results
+
+# Expose nothing in particular; worker talks out to the API.
+# Provide a simple healthcheck so orchestrators can know if the container is running.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD python -c "import sys,os; sys.exit(0)"
+
+# Default command runs the worker. Override via docker-compose/cli args.
+# The worker script accepts CLI flags (e.g. --api, --worker-id, --hybrid-queue, --hybrid-results).
+CMD ["python3", "00_xibalba_alpaca/orchestrator/worker/worker.py", "--api", "http://api:8001", "--worker-id", "docker1", "--hybrid-queue", "hybrid-queue", "--hybrid-results", "hybrid-results"]
