@@ -3,7 +3,8 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches:
-      - 'safety/fix-deploy-safety'
+      - "safety/fix-deploy-safety"
+  workflow_dispatch:
 
 concurrency:
   group: deploy-gh-pages-${{ github.ref }}
@@ -28,14 +29,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
 
-      - name: Install & Build (root or client)
+      - name: Install & Build (client or root)
         shell: bash
         run: |
-          set -e
-          # Prefer client/ if it exists, otherwise root
+          set -euo pipefail
+
+          # Prefer client/ if it exists, otherwise use repo root
           if [ -f client/package.json ]; then
             echo "Using client/ package.json"
             cd client
@@ -53,30 +55,44 @@ jobs:
       - name: Determine publish directory
         id: set-publish-dir
         run: |
-          # Prefer client/build, then build
-          if [ -d client/build ]; then
+          # Determine the correct directory that Vite or other build systems produce.
+          # We prefer the Vite default (client/dist), then generic dist, then client/build, then build.
+          if [ -d client/dist ]; then
+            echo "publish_dir=client/dist" >> "$GITHUB_OUTPUT"
+          elif [ -d dist ]; then
+            echo "publish_dir=dist" >> "$GITHUB_OUTPUT"
+          elif [ -d client/build ]; then
             echo "publish_dir=client/build" >> "$GITHUB_OUTPUT"
           elif [ -d build ]; then
             echo "publish_dir=build" >> "$GITHUB_OUTPUT"
           else
-            # Fallback to client/build (will fail later if missing)
-            echo "publish_dir=client/build" >> "$GITHUB_OUTPUT"
+            # fallback: allow the caller to override by writing a file, but otherwise set client/dist
+            echo "publish_dir=client/dist" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Verify publish directory
+      - name: Verify publish directory exists
         run: |
-          echo "Publish directory set to: ${{ steps.set-publish-dir.outputs.publish_dir }}"
-          if [ ! -d "${{ steps.set-publish-dir.outputs.publish_dir }}" ]; then
+          set -euo pipefail
+          PUBLISH_DIR="${{ steps.set-publish-dir.outputs.publish_dir }}"
+          echo "Publish directory set to: $PUBLISH_DIR"
+          if [ ! -d "$PUBLISH_DIR" ]; then
             echo "Publish directory does not exist. Listing repo top-level for debugging:"
             ls -la || true
-            echo "Directory '${{ steps.set-publish-dir.outputs.publish_dir }}' not found. Failing to avoid publishing empty site."
+            echo "Directory '$PUBLISH_DIR' not found. Failing to avoid publishing empty site."
             exit 1
           fi
 
+      - name: Show publish preview (debug)
+        if: ${{ always() }}
+        run: |
+          echo "Contents of publish directory (first 200 lines):"
+          ls -la "${{ steps.set-publish-dir.outputs.publish_dir }}" || true
+          find "${{ steps.set-publish-dir.outputs.publish_dir }}" -maxdepth 2 -type f -print | sed -n '1,200p' || true
+
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ steps.set-publish-dir.outputs.publish_dir }}
-          # Optional: keep_files: true
-          # Optional: destination_branch: gh-pages (default)
+          # destination_branch: gh-pages # default is gh-pages
+          # keep_files: true           # uncomment to avoid clearing other files
