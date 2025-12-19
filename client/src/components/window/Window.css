@@ -6,19 +6,41 @@
  */
 
 .window {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-default);
+  background: rgba(26, 26, 26, 0.98); /* Paper layer - intentional, weighted */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.26);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.8),
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.2);
   user-select: none;
   pointer-events: auto;
   position: absolute;
   font-family: var(--font-family);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: 
+    box-shadow var(--transition-fast), 
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    opacity var(--transition-fast);
+  animation: windowAppear 0.2s ease-out;
+}
+
+@keyframes windowAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Resize hit zones - 8px wide bands along edges (S3.CN.01b) */
@@ -108,22 +130,25 @@
 }
 
 .window-blurred {
-  border-color: var(--border-default);
-  opacity: 0.92;
+  border-color: rgba(255, 255, 255, 0.08);
+  opacity: 0.8;
+  transform: scale(0.99);
+  filter: blur(0.5px);
 }
 
 .window-titlebar {
-  background: var(--bg-tertiary);
-  border-bottom: 1px solid var(--border-default);
-  padding: var(--space-2) var(--space-3);
+  background: rgba(20, 20, 20, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--space-3) var(--space-4);
   display: flex;
   justify-content: space-between;
   align-items: center;
   /* Cursor handled by spatial semantics - don't set here */
-  min-height: 40px;
+  min-height: 44px;
   -webkit-user-select: none;
   user-select: none;
   flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 /* No active state - spatial semantics handles cursor */
@@ -138,52 +163,86 @@
 .window-title {
   color: var(--text-primary);
   font-size: var(--text-base);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   flex: 1;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   user-select: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1.4;
 }
 
 .window-close {
-  background: transparent;
-  border: none;
-  color: var(--text-tertiary);
-  font-size: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  font-size: 18px;
   line-height: 1;
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
-  min-height: 20px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
   /* Cursor handled by spatial semantics - don't set here */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin-left: var(--space-2);
+  margin-left: var(--space-3);
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   pointer-events: auto;
-  /* Visual size: 20px, but 16px hit radius = 32px effective target */
+  transition: all var(--transition-fast);
+  /* Visual size: 24px, but 16px hit radius = 40px effective target */
   /* Spatial semantics handles click via handlePointerDown */
   /* No hover/active states - spatial semantics handles all interaction feedback */
+}
+
+.window-close:hover {
+  background: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.4);
+  color: #ef4444;
 }
 
 .window-content {
   flex: 1;
   overflow: auto;
-  padding: var(--space-4);
-  color: var(--text-secondary);
-  background: var(--bg-secondary);
+  padding: 0; /* Remove default padding - let content decide */
+  color: var(--text-primary);
+  background: transparent; /* Paper layer shows through */
   outline: none;
   font-size: var(--text-base);
   line-height: var(--leading-relaxed);
+  letter-spacing: -0.01em;
   scrollbar-width: thin;
-  scrollbar-color: var(--bg-tertiary) var(--bg-primary);
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
   -webkit-overflow-scrolling: touch;
   cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Content that needs padding can add it */
+.window-content > * {
+  flex: 1;
+}
+
+.window-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Allow text selection in content areas */

@@ -167,6 +167,8 @@ The sprint/constraint/governance substrate is **real machinery**, not aspiration
 
 **Status:** Private (as of 2025-12-12)
 
+**Note:** Cherry Studio guidance suggests repo name `xibalba-framework-8`, but user confirmed existing repo is `00_xibalba_framework_blockchain`. Current remote configured to user-provided repo.
+
 **Initial Publication:**
 - Guardrails only (UI_BRIEF.md, DO_NOT_TOUCH.md, WORKFLOW.md)
 - Build system (client/, server/)

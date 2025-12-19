@@ -6,8 +6,10 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Window } from '../window/Window'
 import { getWindows, subscribe, getFocusedWindowId, closeFocusedWindow, getWindow, openWindow } from '../../core/window/windowManager'
+import { ScratchpadWindow } from '../scratchpad/ScratchpadWindow'
 // TODO: Phase 4 - desktop persistence, clipboard, feedback
 // import { loadDesk, saveDesk } from '../../core/desktop/persistence'
 // import { ClipboardHandler } from '../clipboard/ClipboardHandler'
@@ -22,6 +24,8 @@ import './Desktop.css'
 export const Desktop: React.FC = () => {
   const [windows, setWindows] = useState(getWindows())
   const desktopRef = React.useRef<HTMLDivElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const isDemo = searchParams.get('demo') === 'true'
 
   // Hydrate desk before first paint
   // TODO: Phase 4 - desktop persistence
@@ -56,6 +60,268 @@ export const Desktop: React.FC = () => {
     })
     return unsubscribe
   }, [])
+
+  // Handle opening window from search result (URL params)
+  useEffect(() => {
+    const openParam = searchParams.get('open')
+    const titleParam = searchParams.get('title')
+    const typeParam = searchParams.get('type')
+    const descParam = searchParams.get('desc')
+
+    if (openParam && titleParam) {
+      // Check if window already exists
+      const existing = getWindows().find(w => w.id === openParam)
+      if (!existing) {
+        console.log('[Desktop] Opening window:', { openParam, titleParam, typeParam })
+        // Use larger size for scratchpad windows
+        const size = typeParam === 'scratchpad' 
+          ? { w: 600, h: 500 } 
+          : WINDOW_DEFAULTS.sizes.feedback
+        const existingWindows = getWindows()
+        const stagger = existingWindows.length * 30
+        
+        // Create content based on result type
+        let content: React.ReactNode
+        const contentStyle: React.CSSProperties = {
+          padding: 0,
+          color: 'var(--text-primary)',
+          lineHeight: 'var(--leading-relaxed)',
+        }
+        
+        if (typeParam === 'command') {
+          content = (
+            <div style={contentStyle}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 'var(--space-4)',
+                marginBottom: 'var(--space-6)',
+                paddingBottom: 'var(--space-4)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: 'var(--radius-full)',
+                  background: 'rgba(6, 182, 212, 0.2)',
+                  border: '2px solid rgba(6, 182, 212, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  ⚡
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ 
+                    margin: 0, 
+                    color: 'var(--text-primary)',
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: 'var(--weight-bold)',
+                    letterSpacing: '-0.02em',
+                    marginBottom: 'var(--space-1)'
+                  }}>
+                    {titleParam}
+                  </h3>
+                  <p style={{
+                    margin: 0,
+                    color: 'var(--text-tertiary)',
+                    fontSize: 'var(--text-sm)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    COMMAND
+                  </p>
+                </div>
+              </div>
+              {descParam && (
+                <p style={{ 
+                  color: 'var(--text-secondary)', 
+                  marginBottom: 'var(--space-6)',
+                  fontSize: 'var(--text-base)',
+                  lineHeight: 'var(--leading-relaxed)'
+                }}>
+                  {descParam}
+                </p>
+              )}
+              <div style={{
+                padding: 'var(--space-5)',
+                background: 'rgba(6, 182, 212, 0.08)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid rgba(6, 182, 212, 0.2)',
+                backdropFilter: 'blur(4px)',
+                WebkitBackdropFilter: 'blur(4px)'
+              }}>
+                <p style={{ 
+                  color: 'var(--text-secondary)', 
+                  fontSize: 'var(--text-sm)',
+                  margin: 0,
+                  lineHeight: 'var(--leading-relaxed)'
+                }}>
+                  This command would execute in a full implementation. The window system is fully functional—you can drag, resize, and close this window.
+                </p>
+              </div>
+            </div>
+          )
+        } else if (typeParam === 'file') {
+          content = (
+            <div style={contentStyle}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 'var(--space-4)',
+                marginBottom: 'var(--space-6)',
+                paddingBottom: 'var(--space-4)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  📄
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ 
+                    margin: 0, 
+                    color: 'var(--text-primary)',
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: 'var(--weight-bold)',
+                    letterSpacing: '-0.02em',
+                    marginBottom: 'var(--space-1)'
+                  }}>
+                    {titleParam}
+                  </h3>
+                  <p style={{
+                    margin: 0,
+                    color: 'var(--text-tertiary)',
+                    fontSize: 'var(--text-sm)',
+                    fontFamily: 'var(--font-family-mono)'
+                  }}>
+                    {descParam || 'File'}
+                  </p>
+                </div>
+              </div>
+              <div style={{
+                padding: 'var(--space-6)',
+                background: 'rgba(255, 255, 255, 0.02)',
+                borderRadius: 'var(--radius-lg)',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                fontFamily: 'var(--font-family-mono)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-secondary)',
+                lineHeight: 'var(--leading-relaxed)',
+                marginTop: 'var(--space-4)'
+              }}>
+                <p style={{ margin: 0, marginBottom: 'var(--space-3)', opacity: 0.9 }}>File content would be displayed here.</p>
+                <p style={{ margin: 0, color: 'var(--text-tertiary)', fontSize: 'var(--text-xs)', opacity: 0.7 }}>In a full implementation, this would show the actual file contents.</p>
+              </div>
+            </div>
+          )
+        } else if (typeParam === 'scratchpad') {
+          // Scratchpad window - persistent text editor
+          // Content is rendered by ScratchpadWindow component
+          content = <ScratchpadWindow id={openParam} />
+        } else {
+          content = (
+            <div style={contentStyle}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 'var(--space-4)',
+                marginBottom: 'var(--space-6)',
+                paddingBottom: 'var(--space-4)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px'
+                }}>
+                  📝
+                </div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ 
+                    margin: 0, 
+                    color: 'var(--text-primary)',
+                    fontSize: 'var(--text-2xl)',
+                    fontWeight: 'var(--weight-bold)',
+                    letterSpacing: '-0.02em',
+                    marginBottom: 'var(--space-1)'
+                  }}>
+                    {titleParam}
+                  </h3>
+                  <p style={{
+                    margin: 0,
+                    color: 'var(--text-tertiary)',
+                    fontSize: 'var(--text-sm)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    CONTENT
+                  </p>
+                </div>
+              </div>
+              {descParam && (
+                <div style={{
+                  padding: 'var(--space-6)',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  borderRadius: 'var(--radius-lg)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  marginTop: 'var(--space-4)'
+                }}>
+                  <p style={{ 
+                    color: 'var(--text-secondary)', 
+                    lineHeight: 'var(--leading-relaxed)',
+                    fontSize: 'var(--text-base)',
+                    margin: 0,
+                    opacity: 0.9
+                  }}>
+                    {descParam}
+                  </p>
+                </div>
+              )}
+            </div>
+          )
+        }
+
+        openWindow({
+          id: openParam,
+          title: titleParam,
+          position: { 
+            x: WINDOW_DEFAULTS.positions.first.x + stagger, 
+            y: WINDOW_DEFAULTS.positions.first.y + stagger 
+          },
+          size,
+          content,
+        })
+
+        // Clear URL params after opening
+        setSearchParams({})
+      } else {
+        // Window exists, just focus it and clear params
+        const window = getWindow(openParam)
+        if (window) {
+          window.state = 'FOCUSED'
+          window.zIndex = Math.max(...getWindows().map(w => w.zIndex)) + 1
+          setWindows(getWindows())
+        }
+        setSearchParams({})
+      }
+    }
+  }, [searchParams, setSearchParams])
 
   // Handle click-away (blur focused window)
   const handleDesktopClick = (e: React.MouseEvent) => {
@@ -143,9 +409,33 @@ export const Desktop: React.FC = () => {
         className="desktop"
         onClick={handleDesktopClick}
       >
-        {windows.map(window => (
-          <Window key={window.id} window={window} />
-        ))}
+        {/* Private context cue - subtle, non-intrusive */}
+        <div className="desktop-context-cue">
+          <span className="desktop-context-text">
+            {isDemo ? 'Demo Workspace' : 'Your workspace'}
+          </span>
+        </div>
+        
+        {/* Demo Mode indicator - visible only in demo sessions */}
+        {isDemo && (
+          <div className="desktop-demo-indicator">
+            <span className="desktop-demo-text">Demo Mode</span>
+          </div>
+        )}
+        
+        {windows.length === 0 ? (
+          <div className="empty-state">
+            <p style={{ fontSize: 'var(--text-lg)', marginBottom: 'var(--space-3)' }}>Search to open a scratchpad.</p>
+            <p className="subtle">Everything here stays local.</p>
+            <p className="subtle" style={{ marginTop: 'var(--space-4)', fontSize: 'var(--text-xs)', opacity: 0.5 }}>
+              Type "/" to focus search, or click the + button.
+            </p>
+          </div>
+        ) : (
+          windows.map(window => (
+            <Window key={window.id} window={window} />
+          ))
+        )}
         
         {/* Launcher button */}
         <button

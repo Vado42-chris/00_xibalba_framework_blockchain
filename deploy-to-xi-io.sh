@@ -10,7 +10,8 @@ DOMAIN="xi-io.com"
 WEB_ROOT="/home/xi-io/public_html"
 
 # Source: The built client
-SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/client/dist" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="$SCRIPT_DIR/client/dist"
 
 echo "🚀 Deploying Xibalba Alpaca to xi-io.com"
 echo "=========================================="
