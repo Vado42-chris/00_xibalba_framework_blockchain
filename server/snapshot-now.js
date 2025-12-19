@@ -195,16 +195,18 @@ async function runSnapshot() {
     result.errors.push("git commit failed: " + String(err));
   }
 
-  // 5) create tar.gz snapshot excluding .git and node_modules
+  // 5) create tar.gz snapshot excluding .git, node_modules, and _incoming
   try {
     // Ensure previous file is removed if exists
     try {
       await fsPromises.unlink(OUT_PATH);
     } catch (e) {}
-    // Use tar CLI for portability
+    // Use tar CLI for portability. Exclude the _incoming directory so the archive
+    // file being written doesn't get picked up while tar walks the tree.
     const tarRes = safeSpawn("tar", [
       "--exclude=.git",
       "--exclude=node_modules",
+      "--exclude=_incoming",
       "-czf",
       OUT_PATH,
       ".",

@@ -1,4 +1,4 @@
-what#!/usr/bin/env node
+#!/usr/bin/env node
 /**
  * hybrid-agent.js
  *
@@ -44,8 +44,14 @@ function argVal(flag, def) {
   return def;
 }
 
-const QUEUE_DIR = argVal("--queue", path.resolve(process.cwd(), "hybrid-queue"));
-const RESULTS_DIR = argVal("--results", path.resolve(process.cwd(), "hybrid-results"));
+const QUEUE_DIR = argVal(
+  "--queue",
+  path.resolve(process.cwd(), "hybrid-queue"),
+);
+const RESULTS_DIR = argVal(
+  "--results",
+  path.resolve(process.cwd(), "hybrid-results"),
+);
 const POLL_MS = Number(argVal("--poll", 800)) || 800;
 const SECRET_TOKEN = process.env.SECRET_TOKEN || null;
 const DRY_RUN = process.env.HYBRID_DRY === "1" || false;
@@ -66,6 +72,11 @@ const WHITELIST = [
   "rsync",
   "tar -czf",
   "service",
+
+  // Allow client-prefixed npm commands so builds run from the `client/` subdir
+  "npm --prefix client run build",
+  "npm --prefix client ci",
+  "npm --prefix client run preview",
 ];
 
 async function ensureDir(dir) {
@@ -127,7 +138,10 @@ async function processFile(file) {
 
     // optional token line like: SECRET_TOKEN: mytoken
     let fileToken = null;
-    if (i < lines.length && lines[i].toUpperCase().startsWith("SECRET_TOKEN:")) {
+    if (
+      i < lines.length &&
+      lines[i].toUpperCase().startsWith("SECRET_TOKEN:")
+    ) {
       fileToken = lines[i].split(":")[1]?.trim();
       i++;
     }
@@ -139,7 +153,8 @@ async function processFile(file) {
     }
 
     // skip any further blank/comment lines until actual command
-    while (i < lines.length && (lines[i] === "" || lines[i].startsWith("#"))) i++;
+    while (i < lines.length && (lines[i] === "" || lines[i].startsWith("#")))
+      i++;
     if (i >= lines.length) {
       await writeResult(id, { error: "No command found" });
       await fs.unlink(full).catch(() => {});
@@ -162,15 +177,33 @@ async function processFile(file) {
 
     try {
       // execute command
-      const { stdout, stderr } = await execP(cmd, { maxBuffer: 10 * 1024 * 1024 });
+      const { stdout, stderr } = await execP(cmd, {
+        maxBuffer: 10 * 1024 * 1024,
+      });
       const finishedAt = new Date().toISOString();
-      await writeResult(id, { id, cmd, exitCode: 0, stdout, stderr, startedAt, finishedAt });
+      await writeResult(id, {
+        id,
+        cmd,
+        exitCode: 0,
+        stdout,
+        stderr,
+        startedAt,
+        finishedAt,
+      });
     } catch (err) {
       const finishedAt = new Date().toISOString();
       const exitCode = err?.code ?? 1;
       const stdout = err?.stdout ?? "";
-      const stderr = err?.stderr ?? (err?.message ?? "Unknown error");
-      await writeResult(id, { id, cmd, exitCode, stdout, stderr, startedAt, finishedAt });
+      const stderr = err?.stderr ?? err?.message ?? "Unknown error";
+      await writeResult(id, {
+        id,
+        cmd,
+        exitCode,
+        stdout,
+        stderr,
+        startedAt,
+        finishedAt,
+      });
     } finally {
       // remove processed command
       await fs.unlink(full).catch(() => {});
@@ -192,7 +225,9 @@ async function pollOnceAndExit() {
     }
   } catch (e) {
     const errPath = path.join(RESULTS_DIR, `agent.error`);
-    await fs.writeFile(errPath, JSON.stringify({ error: String(e) }, null, 2)).catch(() => {});
+    await fs
+      .writeFile(errPath, JSON.stringify({ error: String(e) }, null, 2))
+      .catch(() => {});
     throw e;
   }
 }
@@ -227,7 +262,9 @@ function prettyPrintStartup() {
   console.log("Usage notes:");
   console.log(" - Place files named <id>.cmd into the QUEUE_DIR.");
   console.log(" - Each .cmd file must start with a line: #hybrid-mode");
-  console.log(" - Optional: include a line 'SECRET_TOKEN: <token>' if SECRET_TOKEN is set.");
+  console.log(
+    " - Optional: include a line 'SECRET_TOKEN: <token>' if SECRET_TOKEN is set.",
+  );
   console.log(" - Results are written to RESULTS_DIR/<id>.result as JSON.");
   console.log("");
 }
