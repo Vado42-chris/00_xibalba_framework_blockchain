@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XI‑IO Admin — GitHub PR & CI Helper</title>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#fff;
+      --muted:#64748b;
+      --accent:#2563eb;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+    }
+    html,body{height:100%}
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:var(--bg); color:#0f172a; padding:28px; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    .wrap { max-width:980px; margin:0 auto; }
+    .card { background:var(--card); padding:18px; border-radius:12px; box-shadow:0 6px 24px rgba(14,30,37,.06); }
+    h1 { margin:0 0 6px 0; font-size:20px; }
+    p.lead { margin:4px 0 14px 0; color:var(--muted); font-size:13px; }
+    label { display:block; margin-top:12px; font-weight:600; font-size:13px; color:#0f172a; }
+    input[type=text], input[type=password], textarea, select { width:100%; padding:10px 12px; margin-top:6px; box-sizing:border-box; border:1px solid #e6eef8; border-radius:8px; font-size:13px; background:#fbfdff; color:#0f172a }
+    textarea { min-height:120px; resize:vertical; font-family:inherit; }
+    .row { display:flex; gap:10px; margin-top:12px; }
+    .col { flex:1; }
+    button { margin-top:12px; padding:10px 14px; border-radius:8px; border:0; background:var(--accent); color:white; cursor:pointer; font-weight:600; }
+    button.secondary { background:#0ea5a3; }
+    button.ghost { background:transparent; color:var(--accent); border:1px solid rgba(37,99,235,.12); }
+    pre { background:#0b1220; color:#d6eef8; padding:12px; border-radius:8px; overflow:auto; max-height:420px; font-family:var(--mono); font-size:12px; margin-top:12px; white-space:pre-wrap; word-break:break-word; }
+    .muted { color:var(--muted); font-size:13px; }
+    .hint { font-size:12px; color:#475569; margin-top:6px; }
+    a.link { color:var(--accent); text-decoration:none; font-weight:600; }
+    footer { margin-top:18px; font-size:12px; color:var(--muted); }
+    .flex-between { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .small { font-size:12px; color:#94a3b8; }
+    .green { color:#16a34a; font-weight:700 }
+    .danger { color:#dc2626; font-weight:700 }
+  </style>
+</head>
+<body>
+  <div</body> class="wrap">
+    <div class="card">
+      <div class="flex-between">
+        <div></div>
+          <h1>XI‑IO Admin</h1> — GitHub PR & CI Helper</h1>
+          <p class="lead">A local browser tool to manage draft PR creation, view CI runs, and download job logs. Paste a token into your browser — it never leaves your machine.</p>
+        </div>
+        <div class="small">Local only — keeps secrets in-browser</div>
+      </div>
+
+      <label for="token">GitHub Token (PAT)</label>
+      <input id="token" type="password" placeholder="Paste a token with repo + workflow scopes (kept in browser)" />
+      <div class="hint">Token is used locally in your browser to call the GitHub REST API. Do NOT paste tokens into chat.</div>
+
+      <label for="repo">Repository (owner/name)</label>
+      <input id="repo" type="text" value="Vado42-chris/00_xibalba_framework_blockchain" />
+
+      <label for="branch">Branch</label>
+      <input id="branch" type="text" value="safety/add-controller-automation" />
+
+      <div class="row" style="margin-top:14px">
+        <div class="col"><button id="btnLatestRun">Get latest workflow run URL</button></div>
+        <div class="col"><button id="btnListPRs" class="ghost">List open PRs for branch</button></div>
+      </div>
+
+      <label for="output">Latest run / response</label>
+      <pre id="output">(no output yet)</pre>
+
+      <hr style="margin-top:18px" />
+
+      <h3 style="margin-top:6px">Create Draft PR (from existing branch)</h3>
+      <label for="prTitle">PR title</label>
+      <input id="prTitle" type="text" value="feat(controller): add GitHub App controller for automated PRs" />
+      <label for="prBase">Base branch</label>
+      <input id="prBase" type="text" value="main" />
+      <div class="row">
+        <button id="btnCreatePR">Create Draft PR</button>
+        <button id="btnCreatePRBrowser" class="secondary">Open PR page in GitHub</button>
+      </div>
+      <div class="hint">Creating a draft PR will trigger GitHub Actions on the branch and surface CI runs. Use 'Open PR page' for a manual browser flow.</div>
+
+      <hr style="margin-top:18px" />
+
+      <h3 style="margin-top:6px">Fetch workflow run jobs & logs</h3>
+      <label for="runId">Run ID (optional — fetched automatically when you 'Get latest run')</label>
+      <input id="runId" type="text" />
+
+      <div class="row">
+        <button id="btnListJobs" class="ghost">List Jobs for Run</button>
+        <button id="btnFetchLogs" class="ghost">Download Job Logs (enter JOB ID)</button>
+      </div>
+
+      <footer>
+        <div class="</footer>muted">Usage tips: Use the "Get latest workflow run URL" to discover recent CI runs for the branch. Click "List open PRs" to see PR details. Download job logs to inspect failures locally.</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const outEl = document</script>.getElementById('output');
+
+    function out(v){
+      if (typeof v === 'string') outEl.textContent = v;
+      else outEl.textContent = JSON.stringify(v, null, 2);
+    }
+
+    function getToken(){
+      const t = document.getElementById('token').value.trim();
+      if(!t){ alert('Please paste a GitHub token (PAT) with repo + workflow scopes. This runs only in your browser.'); throw 'no-token' }
+      return t;
+    }
+
+    async function api(path, opts = {}){
+      const token = getToken();
+      const repo = document.getElementById('repo').value.trim();
+      const url = `https://api.github.com/repos/${repo}${path}`;
+      const headers = Object.assign({
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json'
+      }, opts.headers || {});
+      const res = await fetch(url, Object.assign({}, opts, { headers }));
+      const text = await res.text();
+      try { return JSON.parse(text); } catch(e){ return text; }
+    }
+
+    document.getElementById('btnLatestRun').addEventListener('click', async () => {
+      try{
+        out('fetching latest run...');
+        const branch = encodeURIComponent(document.getElementById('branch').value.trim());
+        const data = await api(`/actions/runs?branch=${branch}&per_page=1`);
+        if(!data || !data.workflow_runs || data.workflow_runs.length === 0){
+          out('NO_RUN');
+          return;
+        }
+        const run = data.workflow_runs[0];
+        document.getElementById('runId').value = run.id;
+        out({ runUrl: run.html_url, runId: run.id, status: run.status, conclusion: run.conclusion });
+      }catch(err){
+        out('ERROR: '+String(err));
+      }
+    });
+
+    document.getElementById('btnListPRs').addEventListener('click', async () => {
+      try{
+        out('listing PRs...');
+        const branch = encodeURIComponent(document.getElementById('branch').value.trim());
+        // GitHub expects head as owner:branch for filtering
+        const repo = document.getElementById('repo').value.trim();
+        const owner = repo.split('/')[0];
+        const data = await api(`/pulls?state=open&head=${owner}:${branch}`);
+        out(data);
+      }catch(err){ out('ERROR: '+String(err)); }
+    });
+
+    document.getElementById('btnCreatePR').addEventListener('click', async () => {
+      try{
+        out('creating draft PR...');
+        const title = document.getElementById('prTitle').value.trim();
+        const base = document.getElementById('prBase').value.trim();
+        const branch = document.getElementById('branch').value.trim();
+        const repo = document.getElementById('repo').value.trim();
+        const body = 'Automated draft PR created from UI';
+        const token = getToken();
+        const url = `https://api.github.com/repos/${repo}/pulls`;
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Authorization':'token '+token, 'Content-Type':'application/json', 'Accept':'application/vnd.github.v3+json' },
+          body: JSON.stringify({ title, head: branch, base, body, draft: true })
+        });
+        const text = await resp.text();
+        try { out(JSON.parse(text)); } catch(e){ out(text); }
+      }catch(err){ out('ERROR: '+String(err)); }
+    });
+
+    document.getElementById('btnCreatePRBrowser').addEventListener('click', async () => {
+      const repo = document.getElementById('repo').value.trim();
+      const branch = encodeURIComponent(document.getElementById('branch').value.trim());
+      const url = `https://github.com/${repo}/pull/new/${branch}`;
+      window.open(url, '_blank');
+    });
+
+    document.getElementById('btnListJobs').addEventListener('click', async () => {
+      try{
+        const runId = document.getElementById('runId').value.trim();
+        if(!runId) { out('Enter or fetch a Run ID first'); return; }
+        out('fetching jobs...');
+        const repo = document.getElementById('repo').value.trim();
+        const token = getToken();
+        const url = `https://api.github.com/repos/${repo}/actions/runs/${runId}/jobs`;
+        const res = await fetch(url, { headers: { 'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json' }});
+        const data = await res.json();
+        out(data.jobs || data);
+      }catch(err){ out('ERROR: '+String(err)); }
+    });
+
+    document.getElementById('btnFetchLogs').addEventListener('click', async () => {
+      try{
+        const jobId = prompt('Enter JOB ID to download logs (from Jobs list)');
+        if(!jobId) return;
+        out('fetching logs zip...');
+        const repo = document.getElementById('repo').value.trim();
+        const token = getToken();
+        const url = `https://api.github.com/repos/${repo}/actions/jobs/${jobId}/logs`;
+        const res = await fetch(url, { headers: { 'Authorization':'token '+token, 'Accept':'application/vnd.github.v3+json' }});
+        if(!res.ok){
+          const t = await res.text();
+          out('Error fetching logs: '+t);
+          return;
+        }
+        const blob = await res.blob();
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `job-${jobId}-logs.zip`;
+        link.textContent = 'Download logs zip';
+        // Replace output with the download link
+        out('');
+        const pre = document.getElementById('output');
+        pre.innerHTML = '';
+        pre.appendChild(link);
+      }catch(err){ out('ERROR: '+String(err)); }
+    });
+
+    // small convenience: show example token hint (NOT the token)
+    (function showHint(){
+      const pre = document.getElementById('output');
+      pre.textContent = 'Welcome — paste a GitHub PAT in the top field. Token must include repo and workflow scopes.';
+    })();
+  </script>
+</body>
+</html>

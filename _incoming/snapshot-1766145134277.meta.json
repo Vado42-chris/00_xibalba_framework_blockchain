@@ -1,0 +1,43 @@
+{
+  "branch": "salvage/autosave-1766145134277",
+  "commitCreated": true,
+  "commitSummary": "[salvage/autosave-1766145134277 25d8c2a] WIP snapshot 1766145134277\n 3 files changed, 567 insertions(+), 169 deletions(-)\n create mode 100644 _incoming/save-before-token-limit.tar.gz\n rewrite server/hybrid-api.js (61%)\n create mode 100644 server/snapshot-now.js",
+  "gitStatus": "M server/hybrid-api.js\n?? _incoming/\n?? server/snapshot-now.js",
+  "changedFiles": [
+    " M server/hybrid-api.js",
+    "?? _incoming/",
+    "?? server/snapshot-now.js"
+  ],
+  "tar": null,
+  "sha256": null,
+  "size": null,
+  "summaryPath": "/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/_incoming/snapshot-1766145134277.summary.txt",
+  "metaPath": "/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/_incoming/snapshot-1766145134277.meta.json",
+  "incomingPath": "/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/_incoming/snapshot-1766145134277.tar.gz",
+  "errors": [
+    "tar failed: tar: ./_incoming/snapshot-1766145134277.tar.gz: file changed as we read it\n"
+  ],
+  "timestamp": "2025-12-19T11:52:14.278Z",
+  "recentHybridResults": [
+    {
+      "file": "0001-build.result",
+      "head": "{\n  \"id\": \"0001-build\",\n  \"cmd\": \"npm run build\",\n  \"exitCode\": 254,\n  \"stdout\": \"\",\n  \"stderr\": \"npm error code ENOENT\\nnpm error syscall open\\nnpm error path /media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/chrishallberg/.npm/_logs/2025-12-19T11_43_23_049Z-debug-0.log\\n\",",
+      "tail": "{\n  \"id\": \"0001-build\",\n  \"cmd\": \"npm run build\",\n  \"exitCode\": 254,\n  \"stdout\": \"\",\n  \"stderr\": \"npm error code ENOENT\\nnpm error syscall open\\nnpm error path /media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/chrishallberg/.npm/_logs/2025-12-19T11_43_23_049Z-debug-0.log\\n\",\n  \"startedAt\": \"2025-12-19T11:43:23.017Z\",\n  \"finishedAt\": \"2025-12-19T11:43:23.082Z\"\n}"
+    },
+    {
+      "file": "0002-build.result",
+      "head": "{\n  \"error\": \"Command not allowed by whitelist\",\n  \"cmd\": \"npm --prefix client run build\"\n}",
+      "tail": "{\n  \"error\": \"Command not allowed by whitelist\",\n  \"cmd\": \"npm --prefix client run build\"\n}"
+    }
+  ],
+  "clientPackage": {
+    "name": "client",
+    "version": "0.0.0",
+    "dependencies": [
+      "axios",
+      "react",
+      "react-dom",
+      "react-router-dom"
+    ]
+  }
+}

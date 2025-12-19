@@ -1,0 +1,9 @@
+{
+  "id": "0004-build",
+  "cmd": "npm --prefix client run build",
+  "exitCode": 1,
+  "stdout": "\n> client@0.0.0 build\n> vite build\n\nvite v5.4.21 building for production...\ntransforming...\n✓ 20 modules transformed.\n",
+  "stderr": "x Build failed in 188ms\nerror during build:\nCould not resolve \"./HybridPanel.css\" from \"src/components/HybridPanel.tsx\"\nfile: /media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/client/src/components/HybridPanel.tsx\n    at getRollupError (file:///media/chrishallberg/Storage%201/Work/00_xibalba_alpaca/client/node_modules/rollup/dist/es/shared/parseAst.js:401:41)\n    at error (file:///media/chrishallberg/Storage%201/Work/00_xibalba_alpaca/client/node_modules/rollup/dist/es/shared/parseAst.js:397:42)\n    at ModuleLoader.handleInvalidResolvedId (file:///media/chrishallberg/Storage%201/Work/00_xibalba_alpaca/client/node_modules/rollup/dist/es/shared/node-entry.js:21590:24)\n    at file:///media/chrishallberg/Storage%201/Work/00_xibalba_alpaca/client/node_modules/rollup/dist/es/shared/node-entry.js:21550:26\n",
+  "startedAt": "2025-12-19T12:03:33.911Z",
+  "finishedAt": "2025-12-19T12:03:34.300Z"
+}

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Xibalba Alpaca</title>
+
+    <!-- Favicon (optional) -->
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- Load global CSS from the app -->
+    <link rel="stylesheet" href="/src/index.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Vite entry: import the app and mount it -->
+    <!-- This file serves as the build entry so Vite can find the index.html entry module -->
+    <script type="module">
+      // Import app + react entry. Vite will bundle these imports.
+      import React from 'react';
+      import { createRoot } from 'react-dom/client';
+      import App from '/src/App.tsx';
+      import '/src/index.css';
+
+      // Create root and render the app
+      const el = document.getElementById('root');
+      if (!el) {
+        throw new Error('Root element not found: #root');
+      }
+
+      const root = createRoot(el);
+      root.render(
+        React.createElement(React.StrictMode, null, React.createElement(App))
+      );
+    </script>
+  </body>
+</html>

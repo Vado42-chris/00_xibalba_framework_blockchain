@@ -1,0 +1,62 @@
+Snapshot summary - 2025-12-19T11:52:14.676Z
+
+Branch: salvage/autosave-1766145134277
+Commit created: yes
+
+Commit output:
+[salvage/autosave-1766145134277 25d8c2a] WIP snapshot 1766145134277
+ 3 files changed, 567 insertions(+), 169 deletions(-)
+ create mode 100644 _incoming/save-before-token-limit.tar.gz
+ rewrite server/hybrid-api.js (61%)
+ create mode 100644 server/snapshot-now.js
+
+Git status (porcelain):
+M server/hybrid-api.js
+?? _incoming/
+?? server/snapshot-now.js
+
+Changed files (sample):
+   M server/hybrid-api.js
+  ?? _incoming/
+  ?? server/snapshot-now.js
+
+Snapshot tar: (not created)
+
+Client package: client@0.0.0
+Top dependencies: axios, react, react-dom, react-router-dom
+
+Recent hybrid-results (heads and tails):
+  File: 0001-build.result
+    Head:
+      {
+        "id": "0001-build",
+        "cmd": "npm run build",
+        "exitCode": 254,
+        "stdout": "",
+        "stderr": "npm error code ENOENT\nnpm error syscall open\nnpm error path /media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json\nnpm error errno -2\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json'\nnpm error enoent This is related to npm not being able to find a file.\nnpm error enoent\nnpm error A complete log of this run can be found in: /home/chrishallberg/.npm/_logs/2025-12-19T11_43_23_049Z-debug-0.log\n",
+    Tail:
+      {
+        "id": "0001-build",
+        "cmd": "npm run build",
+        "exitCode": 254,
+        "stdout": "",
+        "stderr": "npm error code ENOENT\nnpm error syscall open\nnpm error path /media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json\nnpm error errno -2\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/media/chrishallberg/Storage 1/Work/00_xibalba_alpaca/package.json'\nnpm error enoent This is related to npm not being able to find a file.\nnpm error enoent\nnpm error A complete log of this run can be found in: /home/chrishallberg/.npm/_logs/2025-12-19T11_43_23_049Z-debug-0.log\n",
+        "startedAt": "2025-12-19T11:43:23.017Z",
+        "finishedAt": "2025-12-19T11:43:23.082Z"
+      }
+
+  File: 0002-build.result
+    Head:
+      {
+        "error": "Command not allowed by whitelist",
+        "cmd": "npm --prefix client run build"
+      }
+    Tail:
+      {
+        "error": "Command not allowed by whitelist",
+        "cmd": "npm --prefix client run build"
+      }
+
+Non-fatal errors / notes:
+  - tar failed: tar: ./_incoming/snapshot-1766145134277.tar.gz: file changed as we read it
+
