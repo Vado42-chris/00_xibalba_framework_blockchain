@@ -1,0 +1,82 @@
+name: Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches:
+      - 'safety/fix-deploy-safety'
+
+concurrency:
+  group: deploy-gh-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install & Build (root or client)
+        shell: bash
+        run: |
+          set -e
+          # Prefer client/ if it exists, otherwise root
+          if [ -f client/package.json ]; then
+            echo "Using client/ package.json"
+            cd client
+            npm ci
+            npm run build --if-present
+            cd ..
+          elif [ -f package.json ]; then
+            echo "Using repo root package.json"
+            npm ci
+            npm run build --if-present
+          else
+            echo "No package.json found in client/ or repo root. Nothing to build."
+          fi
+
+      - name: Determine publish directory
+        id: set-publish-dir
+        run: |
+          # Prefer client/build, then build
+          if [ -d client/build ]; then
+            echo "publish_dir=client/build" >> "$GITHUB_OUTPUT"
+          elif [ -d build ]; then
+            echo "publish_dir=build" >> "$GITHUB_OUTPUT"
+          else
+            # Fallback to client/build (will fail later if missing)
+            echo "publish_dir=client/build" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify publish directory
+        run: |
+          echo "Publish directory set to: ${{ steps.set-publish-dir.outputs.publish_dir }}"
+          if [ ! -d "${{ steps.set-publish-dir.outputs.publish_dir }}" ]; then
+            echo "Publish directory does not exist. Listing repo top-level for debugging:"
+            ls -la || true
+            echo "Directory '${{ steps.set-publish-dir.outputs.publish_dir }}' not found. Failing to avoid publishing empty site."
+            exit 1
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.set-publish-dir.outputs.publish_dir }}
+          # Optional: keep_files: true
+          # Optional: destination_branch: gh-pages (default)
