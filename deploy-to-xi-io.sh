@@ -1,8 +1,14 @@
-#!/bin/bash
+i am using #!/bin/bash
 # Deploy Xibalba Alpaca to xi-io.com
 # Uses existing server at 162.217.146.98
 
 set -e
+
+# SALVAGE MODE: temporarily pause remote deploys while we triage.
+# This prevents accidental rsyncs to production while CI or Cursor is in a deploy loop.
+# To re-enable deploys: remove or comment out the next two lines and merge/revert this change.
+echo "Temporarily pausing remote deploys (salvage mode). No remote actions will be performed."
+exit 0
 
 SERVER="162.217.146.98"
 SERVER_USER="root"

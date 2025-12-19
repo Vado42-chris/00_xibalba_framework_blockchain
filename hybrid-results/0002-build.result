@@ -1,0 +1,4 @@
+{
+  "error": "Command not allowed by whitelist",
+  "cmd": "npm --prefix client run build"
+}
