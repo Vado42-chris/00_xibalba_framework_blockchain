@@ -1,0 +1,30 @@
+Hybrid agent starting with:
+  QUEUE_DIR= hybrid-queue
+  RESULTS_DIR= hybrid-results
+  WHITELIST= [
+  'ls',
+  'cat',
+  'tail',
+  'du',
+  'df',
+  'systemctl status',
+  'journalctl -u',
+  'npm run build',
+  'npm ci',
+  'rsync',
+  'tar -czf',
+  'service',
+  'npm --prefix client run build',
+  'npm --prefix client ci',
+  'npm --prefix client run preview'
+]
+  DRY_RUN= false
+  SECRET_REQUIRED= true
+  MODE= poll
+
+Usage notes:
+ - Place files named <id>.cmd into the QUEUE_DIR.
+ - Each .cmd file must start with a line: #hybrid-mode
+ - Optional: include a line 'SECRET_TOKEN: <token>' if SECRET_TOKEN is set.
+ - Results are written to RESULTS_DIR/<id>.result as JSON.
+
