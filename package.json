@@ -1,0 +1,14 @@
+{
+  "name": "00_xibalba_alpaca",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Temporary root package.json to satisfy CI checks (placeholder). Remove when real project structure is in place.",
+  "scripts": {
+    "build": "echo \"noop: root build placeholder\"",
+    "test": "echo \"noop: no tests\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
