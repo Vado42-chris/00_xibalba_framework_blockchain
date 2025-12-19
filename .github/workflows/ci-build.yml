@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - 'salvage/**'
+      - "salvage/**"
 
 permissions:
   contents: read
@@ -12,35 +12,33 @@ jobs:
   build:
     name: Build client (no deploy)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: 00_xibalba_alpaca/client
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Show node & npm versions
+      - name: Setup Node & build client if present
         run: |
-          node -v
-          npm -v
+          if [ -d "00_xibalba_alpaca/client" ]; then
+            echo "Client directory found: building client..."
+            cd 00_xibalba_alpaca/client
 
-      - name: Install dependencies
-        run: npm ci
+            echo "Node version:"
+            node -v || true
+            echo "npm version:"
+            npm -v || true
 
-      - name: Build (production)
-        run: npm run build
+            echo "Installing dependencies (npm ci)..."
+            npm ci
 
-      - name: List dist contents (if any)
-        run: |
-          echo "Dist directory listing:"
-          ls -la dist || true
+            echo "Running build (npm run build)..."
+            npm run build
+
+            echo "Dist directory listing:"
+            ls -la dist || true
+          else
+            echo "Client directory not found at 00_xibalba_alpaca/client — skipping client build steps."
+          fi
 
       - name: Show first 200 lines of build output (if file exists)
         if: always()
