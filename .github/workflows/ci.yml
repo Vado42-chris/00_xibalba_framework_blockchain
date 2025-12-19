@@ -1,0 +1,34 @@
+name: CI - Build & Smoke
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install controller deps
+        run: |
+          if [ -d "00_xibalba_alpaca/controller" ]; then
+            cd 00_xibalba_alpaca/controller
+            npm ci --silent
+          else
+            echo "No controller dir - skipping npm ci"
+          fi
+
+      - name: Run basic smoke / build (non-failing)
+        run: |
+          echo "SMOKE: verify files exist"
+          ls -la 00_xibalba_alpaca || true
