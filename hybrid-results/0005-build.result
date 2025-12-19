@@ -1,9 +1,0 @@
-{
-  "id": "0005-build",
-  "cmd": "npm --prefix client run build",
-  "exitCode": 0,
-  "stdout": "\n> client@0.0.0 build\n> vite build\n\nvite v5.4.21 building for production...\ntransforming...\n✓ 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.67 kB │ gzip:  0.40 kB\ndist/assets/index-DfUQcHt2.css   14.40 kB │ gzip:  3.76 kB\ndist/assets/index-BeM2unth.js   196.07 kB │ gzip: 62.35 kB\n✓ built in 630ms\n",
-  "stderr": "",
-  "startedAt": "2025-12-19T12:04:07.678Z",
-  "finishedAt": "2025-12-19T12:04:08.523Z"
-}

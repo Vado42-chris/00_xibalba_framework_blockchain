@@ -1,7 +1,0 @@
-remote: 
-remote: Create a pull request for 'safety/fix-deploy-safety' on GitHub by visiting:        
-remote:      https://github.com/Vado42-chris/00_xibalba_framework_blockchain/pull/new/safety/fix-deploy-safety        
-remote: 
-To https://github.com/Vado42-chris/00_xibalba_framework_blockchain.git
- * [new branch]      safety/fix-deploy-safety -> safety/fix-deploy-safety
-Branch 'safety/fix-deploy-safety' set up to track remote branch 'safety/fix-deploy-safety' from 'origin'.
