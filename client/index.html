@@ -1,38 +1,39 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Xibalba Alpaca</title>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>#!/usr/bin/env bash</title>
+<style>
+  :root { --bg:#0f1720; --card:#111827; --accent:#06b6d4; --text:#e6eef6; }
+  body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:linear-gradient(180deg,#071426 0%, #0b1220 100%); color:var(--text); display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .card { width:min(920px,96%); background:rgba(255,255,255,0.03); padding:28px; border-radius:12px; box-shadow:0 6px 30px rgba(2,6,23,0.6); }
+  h1 { margin:0 0 8px 0; font-size:28px; color:#fff; }
+  p { margin:0 0 18px 0; color:#cfe8f5; opacity:0.95; line-height:1.45; }
+  .buttons { display:flex; gap:12px; margin-top:14px; flex-wrap:wrap }
+  .btn { background:var(--accent); color:#012; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:700; box-shadow:0 6px 18px rgba(3,12,22,0.45); }
+  .btn.secondary { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#d9eaf6; font-weight:600; }
+  footer { margin-top:18px; color:#9fbcd6; font-size:13px; opacity:0.9; }
+  .note { background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; margin-top:12px; color:#dceefb; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>#!/usr/bin/env bash</h1>
+    <p>If you can, please consider donating to help keep this project alive. Every bit helps. Thank you for reading and for your support.</p>
 
-    <!-- Favicon (optional) -->
-    <link rel="icon" href="/favicon.ico" />
+    <div class="buttons">
+      <a class="btn" href="cat > ./xiio_one_shot.sh <<'SH'" target="_blank" rel="noopener">Donate / Support</a>
+      <a class="btn secondary" href="mailto:you@example.com?subject=Help%20#!/usr/bin/env bash">Contact</a>
+    </div>
 
-    <!-- Load global CSS from the app -->
-    <link rel="stylesheet" href="/src/index.css" />
-  </head>
-  <body>
-    <div id="root"></div>
+    <div class="note">
+      <strong>Quick updates:</strong> This is a small demo landing page. You can edit <code>index.html</code> to change the text or links.
+    </div>
 
-    <!-- Vite entry: import the app and mount it -->
-    <!-- This file serves as the build entry so Vite can find the index.html entry module -->
-    <script type="module">
-      // Import app + react entry. Vite will bundle these imports.
-      import React from 'react';
-      import { createRoot } from 'react-dom/client';
-      import App from '/src/App.tsx';
-      import '/src/index.css';
-
-      // Create root and render the app
-      const el = document.getElementById('root');
-      if (!el) {
-        throw new Error('Root element not found: #root');
-      }
-
-      const root = createRoot(el);
-      root.render(
-        React.createElement(React.StrictMode, null, React.createElement(App))
-      );
-    </script>
-  </body>
+    <footer>
+      Built quickly to help get something live. If you need help editing this page, ask me and I'll produce changes.
+    </footer>
+  </div>
+</body>
 </html>
